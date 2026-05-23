@@ -1,0 +1,1769 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learnova AI</title>
+    <script>
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem("learnova_theme") || "light";
+      } catch (_) {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --panel: rgba(255, 255, 255, 0.82);
+        --panel-solid: #ffffff;
+        --text: #101828;
+        --muted: #667085;
+        --line: #e4e7ec;
+        --brand: #0f766e;
+        --brand-2: #2563eb;
+        --accent: #e76f51;
+        --gold: #f4a261;
+        --ok: #16a34a;
+        --danger: #dc2626;
+        --shadow: 0 24px 80px rgba(16, 24, 40, 0.12);
+        --soft-shadow: 0 14px 40px rgba(16, 24, 40, 0.08);
+        color-scheme: light;
+      }
+
+      [data-theme="dark"] {
+        --bg: #0b1018;
+        --panel: rgba(17, 24, 39, 0.78);
+        --panel-solid: #111827;
+        --text: #f9fafb;
+        --muted: #a9b4c2;
+        --line: #233044;
+        --brand: #2dd4bf;
+        --brand-2: #60a5fa;
+        --accent: #fb7185;
+        --gold: #fbbf24;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+        --soft-shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
+        color-scheme: dark;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--text);
+        background: var(--bg);
+        letter-spacing: 0;
+      }
+
+      button, input, select, textarea { font: inherit; }
+      button { cursor: pointer; }
+      a { color: inherit; text-decoration: none; }
+
+      .landing {
+        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(246, 248, 251, 0.97) 0%, rgba(246, 248, 251, 0.88) 48%, rgba(246, 248, 251, 0.30) 100%),
+          url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") center right / cover;
+      }
+
+      [data-theme="dark"] .landing {
+        background:
+          linear-gradient(90deg, rgba(11, 16, 24, 0.98) 0%, rgba(11, 16, 24, 0.88) 48%, rgba(11, 16, 24, 0.42) 100%),
+          url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") center right / cover;
+      }
+
+      .container {
+        width: min(1180px, calc(100vw - 40px));
+        margin: 0 auto;
+      }
+
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.72);
+        border-bottom: 1px solid rgba(228, 231, 236, 0.78);
+      }
+
+      [data-theme="dark"] .site-nav {
+        background: rgba(11, 16, 24, 0.68);
+      }
+
+      .nav-inner {
+        height: 74px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
+        font-size: 1.08rem;
+      }
+
+      .brand-mark {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        color: white;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 12px 26px rgba(15, 118, 110, 0.26);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 15px;
+        font-weight: 800;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        color: white;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        box-shadow: 0 16px 34px rgba(37, 99, 235, 0.22);
+      }
+      .btn-secondary { color: white; background: var(--text); }
+      .btn-soft {
+        color: var(--text);
+        background: var(--panel);
+        border: 1px solid var(--line);
+      }
+      .btn-wide { width: 100%; }
+
+      .hero {
+        min-height: calc(100vh - 74px);
+        display: grid;
+        align-items: center;
+        padding: 72px 0 84px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 0.72fr);
+        align-items: center;
+        gap: 54px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 12px;
+        color: var(--brand);
+        background: var(--panel);
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+
+      .hero h1 {
+        max-width: 760px;
+        margin: 20px 0 18px;
+        font-size: clamp(3rem, 7vw, 6.4rem);
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      .hero p {
+        max-width: 650px;
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.75;
+      }
+
+      .hero-panel {
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 22px;
+        padding: 22px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(24px);
+        animation: liftIn 650ms ease both;
+      }
+
+      .preview-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .preview-head h3 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+
+      .preview-head small {
+        display: block;
+        margin-top: 5px;
+      }
+
+      .preview-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .preview-tab {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 7px 10px;
+        color: var(--muted);
+        background: var(--panel-solid);
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .preview-tab.active {
+        color: white;
+        background: linear-gradient(135deg, var(--brand), var(--brand-2));
+        border-color: transparent;
+      }
+
+      .preview-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .preview-task {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--panel-solid);
+      }
+
+      .preview-check {
+        width: 22px;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: white;
+        background: var(--ok);
+        font-size: 0.72rem;
+        font-weight: 900;
+      }
+
+      .preview-task b {
+        display: block;
+        font-size: 0.92rem;
+      }
+
+      .preview-task small {
+        display: block;
+        margin-top: 3px;
+      }
+
+      .preview-minutes {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .preview-foot {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 14px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+
+      .mini-card {
+        display: grid;
+        gap: 10px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel-solid);
+      }
+
+      .score-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .progress {
+        height: 9px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e6edf3;
+      }
+
+      [data-theme="dark"] .progress { background: #1f2a3c; }
+      .progress span {
+        display: block;
+        height: 100%;
+        width: var(--value);
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      }
+
+      .section {
+        padding: 78px 0;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .section-head h2 {
+        max-width: 680px;
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 1.03;
+      }
+
+      .section-head p {
+        max-width: 420px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .feature-grid, .testimonial-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .feature-card, .testimonial, .step-card, .glass-card {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
+        background: var(--panel);
+        box-shadow: var(--soft-shadow);
+        backdrop-filter: blur(18px);
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .feature-card:hover, .testimonial:hover, .step-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(37, 99, 235, 0.35);
+        box-shadow: var(--shadow);
+      }
+
+      .icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        color: white;
+        background: linear-gradient(135deg, var(--brand), var(--accent));
+        font-weight: 900;
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .step-number {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: white;
+        background: var(--text);
+        font-weight: 900;
+      }
+
+      .stars {
+        color: var(--gold);
+        font-weight: 900;
+        letter-spacing: 1px;
+      }
+
+      footer {
+        padding: 32px 0;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        background: var(--panel-solid);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: none;
+        place-items: center;
+        padding: 20px;
+        background: rgba(16, 24, 40, 0.42);
+        backdrop-filter: blur(10px);
+      }
+
+      .modal.active { display: grid; animation: fadeIn 180ms ease both; }
+      .modal-card {
+        width: min(460px, 100%);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 24px;
+        background: var(--panel-solid);
+        box-shadow: var(--shadow);
+        animation: modalIn 240ms ease both;
+      }
+
+      .modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+      .modal-head h2 { margin: 0; }
+      .close {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: transparent;
+        border-radius: 10px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        margin-bottom: 14px;
+        color: var(--text);
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      small {
+        color: var(--muted);
+        font-weight: 500;
+        line-height: 1.45;
+      }
+
+      input, select, textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 13px;
+        color: var(--text);
+        background: var(--panel-solid);
+        outline: none;
+        transition: border-color 160ms ease, box-shadow 160ms ease;
+      }
+
+      input:focus, select:focus, textarea:focus {
+        border-color: var(--brand-2);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      }
+
+      textarea { min-height: 110px; resize: vertical; }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 16px;
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: none;
+        grid-template-columns: 276px 1fr;
+      }
+
+      .app-shell.active { display: grid; }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 22px;
+        border-right: 1px solid var(--line);
+        background: var(--panel-solid);
+      }
+
+      .side-nav {
+        display: grid;
+        gap: 8px;
+        margin-top: 28px;
+      }
+
+      .side-nav button {
+        width: 100%;
+        justify-content: flex-start;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid transparent;
+      }
+
+      .side-nav button.active, .side-nav button:hover {
+        color: var(--text);
+        background: rgba(37, 99, 235, 0.08);
+        border-color: rgba(37, 99, 235, 0.12);
+      }
+
+      .app-main {
+        min-width: 0;
+        padding: 22px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .topbar h2 { margin: 0; font-size: 1.7rem; }
+      .topbar p { margin: 6px 0 0; color: var(--muted); }
+
+      .app-section { display: none; }
+      .app-section.active { display: block; animation: fadeUp 220ms ease both; }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .stat {
+        min-height: 142px;
+        display: grid;
+        align-content: space-between;
+      }
+
+      .stat span { color: var(--muted); font-weight: 800; }
+      .stat strong { display: block; font-size: 2rem; margin-top: 10px; }
+
+      .dash-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: 16px;
+      }
+
+      .notice {
+        display: none;
+        margin-bottom: 16px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        border: 1px solid #bbf7d0;
+        color: #14532d;
+        background: #ecfdf5;
+      }
+
+      .notice.error {
+        color: #9f1239;
+        background: #fff1f2;
+        border-color: #fecdd3;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        z-index: 70;
+        display: none;
+        max-width: min(520px, calc(100vw - 32px));
+        transform: translateX(-50%);
+        padding: 13px 16px;
+        border: 1px solid #bbf7d0;
+        border-radius: 14px;
+        color: #14532d;
+        background: #ecfdf5;
+        box-shadow: var(--shadow);
+      }
+
+      .toast.error {
+        color: #9f1239;
+        background: #fff1f2;
+        border-color: #fecdd3;
+      }
+
+      .empty-state {
+        border: 1px dashed var(--line);
+        border-radius: 18px;
+        padding: 24px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .resource, .plan, .activity, .student-row {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel-solid);
+        margin-top: 10px;
+      }
+
+      .task-row {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: start;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--panel-solid);
+        margin-top: 10px;
+        transition: opacity 160ms ease, transform 160ms ease;
+      }
+
+      .task-row:hover { transform: translateY(-1px); }
+      .task-row.done { opacity: 0.68; }
+      .task-row.done .task-title { text-decoration: line-through; }
+      .task-check {
+        width: 22px;
+        height: 22px;
+        accent-color: var(--brand);
+        margin-top: 3px;
+      }
+
+      .task-meta {
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      .visual-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .bar-visual {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 120px 1fr 44px;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .bar-track {
+        height: 13px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e6edf3;
+      }
+
+      [data-theme="dark"] .bar-track { background: #1f2a3c; }
+      .bar-fill {
+        display: block;
+        width: var(--value);
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--brand), var(--brand-2));
+      }
+
+      .donut-wrap {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .donut {
+        --percent: 0;
+        width: 138px;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: conic-gradient(var(--brand) calc(var(--percent) * 1%), #e6edf3 0);
+      }
+
+      [data-theme="dark"] .donut { background: conic-gradient(var(--brand) calc(var(--percent) * 1%), #1f2a3c 0); }
+      .donut::before {
+        content: attr(data-label);
+        width: 96px;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--panel-solid);
+        color: var(--text);
+        font-size: 1.6rem;
+        font-weight: 900;
+      }
+
+      .visual-note {
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .day-group {
+        margin-top: 16px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.46);
+      }
+
+      [data-theme="dark"] .day-group { background: rgba(17, 24, 39, 0.42); }
+      .day-group h4 {
+        margin: 0 0 10px;
+        font-size: 1.05rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        padding: 7px 10px;
+        margin: 4px 6px 4px 0;
+        color: #7c2d12;
+        background: #fef3c7;
+        font-weight: 900;
+        font-size: 0.82rem;
+      }
+
+      .subject-builder {
+        display: grid;
+        gap: 10px;
+      }
+
+      .subject-input-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+      }
+
+      .subject-add {
+        min-height: 44px;
+      }
+
+      .subject-chips {
+        min-height: 48px;
+        padding: 8px;
+        border: 1px dashed var(--line);
+        border-radius: 14px;
+      }
+
+      .subject-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 14px 0;
+      }
+
+      .subject-tab {
+        color: var(--text);
+        background: var(--panel-solid);
+        border: 1px solid var(--line);
+      }
+
+      .subject-tab.active {
+        color: white;
+        background: var(--brand);
+        border-color: var(--brand);
+      }
+
+      .chip-remove {
+        width: 18px;
+        height: 18px;
+        display: inline-grid;
+        place-items: center;
+        border: 0;
+        border-radius: 999px;
+        padding: 0;
+        color: #7c2d12;
+        background: rgba(124, 45, 18, 0.12);
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .loader {
+        width: 18px;
+        height: 18px;
+        border: 3px solid rgba(255, 255, 255, 0.4);
+        border-top-color: white;
+        border-radius: 999px;
+        animation: spin 800ms linear infinite;
+      }
+
+      .theme-toggle {
+        width: 42px;
+        height: 42px;
+        color: var(--text);
+        background: var(--panel);
+        border: 1px solid var(--line);
+        padding: 0;
+        font-size: 1.12rem;
+        line-height: 1;
+      }
+
+      .mobile-menu {
+        display: none;
+      }
+
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes modalIn { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      @keyframes liftIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      @media (max-width: 1020px) {
+        .hero-grid, .dash-grid { grid-template-columns: 1fr; }
+        .feature-grid, .testimonial-grid, .steps, .stats-grid, .visual-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .app-shell { grid-template-columns: 1fr; }
+        .sidebar {
+          position: fixed;
+          z-index: 40;
+          inset: 0 auto 0 0;
+          width: 280px;
+          transform: translateX(-105%);
+          transition: transform 200ms ease;
+          box-shadow: var(--shadow);
+        }
+        .sidebar.open { transform: translateX(0); }
+        .mobile-menu { display: inline-flex; }
+      }
+
+      @media (max-width: 700px) {
+        .container { width: min(100% - 28px, 1180px); }
+        .landing { background-position: center; }
+        .nav-inner { height: auto; padding: 14px 0; }
+        .hero { padding: 46px 0 60px; }
+        .hero-panel { padding: 16px; }
+        .feature-grid, .testimonial-grid, .steps, .stats-grid, .form-grid, .visual-grid { grid-template-columns: 1fr; }
+        .section-head { display: grid; }
+        .app-main { padding: 16px; }
+        .topbar { align-items: flex-start; flex-direction: column; }
+        .subject-input-row { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="landing" class="landing">
+      <nav class="site-nav">
+        <div class="container nav-inner">
+          <a class="brand" href="#top" aria-label="Learnova AI home">
+            <span class="brand-mark">AI</span>
+            <span>Learnova AI</span>
+          </a>
+          <div class="nav-actions">
+            <button class="btn theme-toggle" onclick="toggleTheme()" title="Switch to dark theme" aria-label="Switch to dark theme">&#9790;</button>
+            <button class="btn btn-soft" onclick="openAuth('login')">Login</button>
+            <button class="btn btn-primary" onclick="openAuth('signup')">Sign Up</button>
+          </div>
+        </div>
+      </nav>
+
+      <section id="top" class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="eyebrow">Adaptive study roadmap intelligence</span>
+            <h1>Personalized learning roadmaps powered by AI.</h1>
+            <p>Learnova AI turns subjects, focus topics, target scores, weak points, and feedback into adaptive strategies, day-wise plans, task tracking, and progress insights.</p>
+            <div class="nav-actions">
+              <button class="btn btn-primary" onclick="openAuth('signup')">Get Started</button>
+              <a class="btn btn-soft" href="#features">Explore Features</a>
+            </div>
+          </div>
+          <div class="hero-panel" aria-label="Study roadmap preview">
+            <div class="preview-head">
+              <div>
+                <h3>ML Roadmap Preview</h3>
+                <small>Focus mode &middot; 7 days &middot; 1 hour/day</small>
+              </div>
+              <span class="pill">82% target</span>
+            </div>
+            <div class="preview-tabs" aria-label="Sample subject tabs">
+              <span class="preview-tab active">ML</span>
+              <span class="preview-tab">React</span>
+              <span class="preview-tab">DSA</span>
+            </div>
+            <div class="preview-list">
+              <div class="preview-task">
+                <span class="preview-check">&#10003;</span>
+                <div><b>Concept map refresh</b><small>CNN basics and weak definitions</small></div>
+                <span class="preview-minutes">20m</span>
+              </div>
+              <div class="preview-task">
+                <span class="preview-check">2</span>
+                <div><b>Timed practice set</b><small>10 mixed questions with mistake notes</small></div>
+                <span class="preview-minutes">25m</span>
+              </div>
+              <div class="preview-task">
+                <span class="preview-check">3</span>
+                <div><b>Mini review</b><small>Update feedback and mark progress</small></div>
+                <span class="preview-minutes">15m</span>
+              </div>
+            </div>
+            <div class="preview-foot">
+              <div>
+                <small>Plan completion</small>
+                <div class="progress"><span style="--value:64%"></span></div>
+              </div>
+              <strong>64%</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="features" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>A smarter AI workspace for subject-wise progress.</h2>
+          <p>Students can generate focused plans by subject, topic, plan mode, and available study time.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="icon">AI</div><h3>Smart Strategy Prediction</h3><p>Random Forest recommends a learning strategy from scores, target, preference, study time, and weak-point signals.</p></article>
+          <article class="feature-card"><div class="icon">RL</div><h3>Adaptive Feedback Loop</h3><p>Q-learning uses student feedback and score improvement to adjust future recommendations over time.</p></article>
+          <article class="feature-card"><div class="icon">MS</div><h3>Multi-Subject Roadmaps</h3><p>Students can save multiple subjects and view separated study-plan tabs for each subject after generation.</p></article>
+          <article class="feature-card"><div class="icon">FT</div><h3>Focus Topic Planning</h3><p>Optional focus topics guide the roadmap toward specific chapters, skills, or concepts instead of a generic plan.</p></article>
+          <article class="feature-card"><div class="icon">PM</div><h3>Flexible Plan Modes</h3><p>Choose full-subject improvement, focused improvement, exam revision, or mock-test practice before generating tasks.</p></article>
+          <article class="feature-card"><div class="icon">TS</div><h3>Task Progress Analytics</h3><p>Dashboards show score gaps, saved subjects, weak areas, plan completion, activity, and active study tasks.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>How it works</h2>
+          <p>A clean workflow for building topic-aware study plans and improving them with feedback.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card"><div class="step-number">1</div><h3>Login</h3><p>Students or admins enter the platform through a secure role-aware flow.</p></article>
+          <article class="step-card"><div class="step-number">2</div><h3>Build Profile</h3><p>Add subjects, scores, weak point, learning style, focus topics, and daily study time.</p></article>
+          <article class="step-card"><div class="step-number">3</div><h3>Generate Roadmap</h3><p>Select plan length and mode, then create subject-wise daily tasks with model-backed strategy guidance.</p></article>
+          <article class="step-card"><div class="step-number">4</div><h3>Track & Improve</h3><p>Complete tasks, review dashboard progress, and submit feedback that rewards the adaptive policy.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Trusted by focused learners</h2>
+          <p>Stories that reflect the updated roadmap workflow.</p>
+        </div>
+        <div class="testimonial-grid">
+          <article class="testimonial"><div class="stars">*****</div><p>"The subject tabs made it easy to study ML and React without mixing up the tasks."</p><strong>Aarav, Undergraduate</strong></article>
+          <article class="testimonial"><div class="stars">*****</div><p>"I could pick revision mode before exams and focus only on the topics I was weak in."</p><strong>Meera, High School</strong></article>
+          <article class="testimonial"><div class="stars">*****</div><p>"The dashboard connects scores, weak areas, and task completion in one view."</p><strong>Faculty Reviewer</strong></article>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer-inner">
+        <div><strong>Learnova AI</strong><br />AI-powered personalized learning strategies.</div>
+        <div>Contact: support@learnova.ai</div>
+        <div>Links: Privacy &middot; Terms &middot; Help &middot; Social</div>
+      </div>
+    </footer>
+
+    <div id="authModal" class="modal" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-head">
+          <div>
+            <h2 id="authTitle">Login</h2>
+            <small id="authSubtitle">Access your personalized learning workspace.</small>
+          </div>
+          <button class="close" onclick="closeAuth()">X</button>
+        </div>
+        <div id="authError" class="notice error" style="display:none"></div>
+        <label id="nameField" style="display:none">Name <input id="authName" placeholder="Your full name" /></label>
+        <label>Email <input id="authEmail" placeholder="you@example.com" /></label>
+        <label>Password <input id="authPassword" type="password" placeholder="Minimum 6 characters" /></label>
+        <label id="roleField" style="display:none">Role
+          <select id="authRole"><option value="student">Student</option><option value="admin">Admin</option></select>
+        </label>
+        <button id="authSubmit" class="btn btn-primary btn-wide" onclick="submitAuth()">Login</button>
+        <p style="color:var(--muted);text-align:center">
+          <span id="authSwitchText">Need an account?</span>
+          <button class="btn btn-soft" onclick="switchAuthMode()" id="authSwitch">Sign Up</button>
+        </p>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div id="appShell" class="app-shell">
+      <aside id="sidebar" class="sidebar">
+        <div class="brand"><span class="brand-mark">AI</span><span>Learnova AI</span></div>
+        <div class="side-nav">
+          <button onclick="showAppSection('dashboard')" class="active" data-tab="dashboard">Dashboard</button>
+          <button onclick="showAppSection('profile')" data-tab="profile">Profile</button>
+          <button onclick="showAppSection('generate')" data-tab="generate">Roadmap</button>
+          <button onclick="showAppSection('feedback')" data-tab="feedback">Feedback</button>
+          <button id="adminButton" onclick="showAppSection('admin')" data-tab="admin" style="display:none">Admin</button>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </aside>
+      <main class="app-main">
+        <div class="topbar">
+          <div>
+            <button class="btn btn-soft mobile-menu" onclick="toggleSidebar()">Menu</button>
+            <h2 id="screenTitle">Dashboard</h2>
+            <p id="screenSubtitle">Your learning command center.</p>
+          </div>
+          <div class="nav-actions">
+            <button class="btn theme-toggle" onclick="toggleTheme()" title="Switch to dark theme" aria-label="Switch to dark theme">&#9790;</button>
+            <button id="quickGenerate" class="btn btn-primary" onclick="showAppSection('generate')">Generate Roadmap</button>
+          </div>
+        </div>
+
+        <div id="notice" class="notice"></div>
+
+        <section id="dashboardSection" class="app-section active">
+          <div class="stats-grid">
+            <article class="glass-card stat"><span>Current Score</span><strong id="scoreStat">-</strong><div class="progress"><span id="scoreBar" style="--value:0%"></span></div></article>
+            <article class="glass-card stat"><span>Target Score</span><strong id="targetStat">-</strong><div class="progress"><span id="targetBar" style="--value:0%"></span></div></article>
+            <article class="glass-card stat"><span>RL Reward</span><strong id="rewardStat">-</strong><small>Average feedback reward</small></article>
+            <article class="glass-card stat"><span>Task Completion</span><strong id="taskStat">-</strong><small id="taskSubtext">Weekly plan progress</small></article>
+          </div>
+          <div class="visual-grid">
+            <article class="glass-card">
+              <h3>Performance Graph</h3>
+              <div id="performanceBars" class="bar-visual"></div>
+            </article>
+            <article class="glass-card">
+              <h3>Plan Progress</h3>
+              <div class="donut-wrap">
+                <div id="taskDonut" class="donut" style="--percent:0" data-label="0%"></div>
+                <p id="progressNote" class="visual-note">Generate a plan and complete tasks to see progress.</p>
+              </div>
+            </article>
+          </div>
+          <div class="dash-grid">
+            <article class="glass-card">
+              <h3>Weak Areas</h3>
+              <div id="weakAreaList" class="empty-state">Complete setup to see weak areas.</div>
+            </article>
+            <article class="glass-card">
+              <h3>Saved Subjects</h3>
+              <div id="subjectList" class="empty-state">Add subjects in your profile.</div>
+            </article>
+            <article class="glass-card">
+              <h3>Recent Activity</h3>
+              <div id="recentActivity" class="empty-state">No recent activity yet.</div>
+            </article>
+          </div>
+          <article class="glass-card" style="margin-top:16px">
+            <h3>Active Study Tasks</h3>
+            <div id="dashboardTasks" class="empty-state">Generate a study plan to start tracking daily tasks.</div>
+          </article>
+        </section>
+
+        <section id="profileSection" class="app-section">
+          <article class="glass-card">
+            <h3 id="setupHeading">Learning profile</h3>
+            <p style="color:var(--muted)">Enter only what the student naturally knows. The plan can be generated immediately after saving.</p>
+            <div class="form-grid">
+              <label>Name <input id="p_name" placeholder="Example: Riya Sharma" oninput="updateSetupHeading()" /></label>
+              <label>Age <input id="p_age" type="number" placeholder="Example: 18" /></label>
+              <label>Education Level
+                <select id="p_education_level"><option value="">Select level</option><option>High School</option><option>Diploma</option><option>Undergraduate</option><option>Postgraduate</option></select>
+              </label>
+              <label>Subjects
+                <div class="subject-builder">
+                  <div class="subject-input-row">
+                    <input id="subject_entry" placeholder="Example: ML, React or ML and React" onkeydown="handleSubjectEntry(event)" />
+                    <button type="button" class="btn btn-soft subject-add" onclick="addSubject()">Add</button>
+                  </div>
+                  <input id="p_subjects" type="hidden" />
+                  <div id="subjectChips" class="subject-chips empty-state">No subjects added yet.</div>
+                  <small>Add subjects one by one. They are saved in your profile and used in the weekly plan.</small>
+                </div>
+              </label>
+              <label>Learning Preference
+                <select id="p_learning_style"><option value="">Select preference</option><option>Visual</option><option>Reading</option><option>Practical</option><option>Audio</option></select>
+                <small>Choose how you understand topics fastest.</small>
+              </label>
+              <label>Preferred Study Time
+                <select id="p_preferred_study_time"><option value="">Select time</option><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Night</option></select>
+              </label>
+              <label>Daily Study Time
+                <select id="study_time_choice"><option value="">Select availability</option><option value="0.5">30 min/day</option><option value="1">1 hour/day</option><option value="2">2 hours/day</option><option value="3">3+ hours/day</option></select>
+                <small>This keeps the weekly plan realistic.</small>
+              </label>
+              <label>Previous Exam Score <input id="p_quiz_scores" type="number" placeholder="Example: 62" /><small>Use last exam/test percentage. If unsure, estimate current level.</small></label>
+              <label>Target Score <input id="p_target_score" type="number" placeholder="Example: 85" /><small>Choose a realistic next-exam goal.</small></label>
+              <label>Weak Point
+                <select id="p_weak_point"><option value="">Select weak point</option><option>Understanding concepts</option><option>Remembering theory</option><option>Solving problems</option><option>Time management</option><option>Lack of focus</option><option>Exam fear</option><option>Revision planning</option></select>
+              </label>
+              <label>Focus Topics
+                <input id="p_focus_topics" placeholder="Optional: Algorithms, Backtracking, CNN" />
+                <small>Leave blank for a full-subject improvement plan.</small>
+              </label>
+              <label>Plan Length
+                <select id="p_plan_days"><option value="3">3 days</option><option value="5">5 days</option><option value="7" selected>7 days</option><option value="10">10 days</option><option value="14">14 days</option><option value="21">21 days</option><option value="30">30 days</option></select>
+                <small>Choose how many days of study tasks to generate.</small>
+              </label>
+              <label>Plan Mode
+                <select id="p_plan_mode"><option value="improvement">Full Subject Improvement</option><option value="focus">Focus Topic Improvement</option><option value="revision">Exam Revision</option><option value="mock">Mock Test Practice</option></select>
+                <small>Select the style of study plan the student needs right now.</small>
+              </label>
+            </div>
+            <button class="btn btn-soft" onclick="saveProfile()">Save Setup</button>
+            <button class="btn btn-primary" onclick="saveAndGenerate()">Save & Generate Study Plan</button>
+          </article>
+        </section>
+
+        <section id="generateSection" class="app-section">
+          <article class="glass-card">
+            <h3>Generate Personalized Roadmap</h3>
+            <p style="color:var(--muted)">The result uses ML prediction, Q-learning adaptation, your weak point, focus topics, and selected plan length.</p>
+            <button id="generateBtn" class="btn btn-primary" onclick="generateRecommendation()">Generate Roadmap</button>
+            <div id="resultArea" class="empty-state" style="margin-top:16px">Your personalized roadmap will appear here.</div>
+            <div id="planArea"></div>
+          </article>
+        </section>
+
+        <section id="feedbackSection" class="app-section">
+          <article class="glass-card">
+            <h3>Feedback Loop</h3>
+            <p style="color:var(--muted)">Submit feedback after using a strategy. This updates the Q-learning reward table.</p>
+            <div class="form-grid">
+              <label>Rating <input id="rating" type="number" min="1" max="5" placeholder="1 to 5" /></label>
+              <label>Did it help?
+                <select id="helped"><option value="true">Yes</option><option value="false">No</option></select>
+              </label>
+              <label>Score Before <input id="score_before" type="number" placeholder="Example: 62" /></label>
+              <label>Score After <input id="score_after" type="number" placeholder="Example: 72" /></label>
+            </div>
+            <label>Comments <textarea id="comments" placeholder="What worked or did not work?"></textarea></label>
+            <button class="btn btn-primary" onclick="submitFeedback()">Submit Feedback</button>
+          </article>
+        </section>
+
+        <section id="adminSection" class="app-section">
+          <article class="glass-card">
+            <h3>Admin Analytics</h3>
+            <p style="color:var(--muted)">Monitor student progress, weak learners, recommendation usage, and reward quality.</p>
+            <button class="btn btn-primary" onclick="loadAdmin()">Refresh Admin Dashboard</button>
+            <div id="adminArea" style="margin-top:16px"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const API_BASE = location.port === "8000" ? "" : "http://127.0.0.1:8000";
+      const APP_RESULT_VERSION = "roadmap-v7-mode-graphs";
+      let authMode = "login";
+      let token = localStorage.getItem("learnova_token") || "";
+      let role = localStorage.getItem("learnova_role") || "";
+      let lastRecommendationId = null;
+      let latestDashboard = null;
+      let subjectItems = [];
+      let activePlanTasks = [];
+      let activePlanSubjects = [];
+
+      function updateThemeControls() {
+        const isDark = document.documentElement.dataset.theme === "dark";
+        document.querySelectorAll(".theme-toggle").forEach(button => {
+          button.textContent = isDark ? "\u2600" : "\u263e";
+          button.title = isDark ? "Switch to light theme" : "Switch to dark theme";
+          button.setAttribute("aria-label", button.title);
+        });
+      }
+
+      function toggleTheme() {
+        const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = nextTheme;
+        try {
+          localStorage.setItem("learnova_theme", nextTheme);
+        } catch (_) {}
+        updateThemeControls();
+      }
+
+      function showMessage(message, isError = false) {
+        toast.textContent = message;
+        toast.className = isError ? "toast error" : "toast";
+        toast.style.display = "block";
+        window.clearTimeout(showMessage.timer);
+        showMessage.timer = window.setTimeout(() => { toast.style.display = "none"; }, 3600);
+        const notice = document.getElementById("notice");
+        if (!notice || !appShell.classList.contains("active")) return;
+        notice.textContent = message;
+        notice.className = isError ? "notice error" : "notice";
+        notice.style.display = "block";
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char]));
+      }
+
+      function parseSubjects(value) {
+        return String(value || "")
+          .replace(/\s+(and|&)\s+/gi, ",")
+          .replace(/[;/|]+/g, ",")
+          .split(",")
+          .map(subject => subject.trim())
+          .map(subject => {
+            const lowered = subject.toLowerCase();
+            if (lowered === "ml" || lowered === "ai" || lowered === "dl") return subject.toUpperCase();
+            if (lowered === "react") return "React";
+            return subject;
+          })
+          .filter(Boolean)
+          .filter((subject, index, list) => list.findIndex(item => item.toLowerCase() === subject.toLowerCase()) === index);
+      }
+
+      function renderSubjectChips() {
+        p_subjects.value = subjectItems.join(", ");
+        if (!subjectItems.length) {
+          subjectChips.className = "subject-chips empty-state";
+          subjectChips.textContent = "No subjects added yet.";
+          return;
+        }
+        subjectChips.className = "subject-chips";
+        subjectChips.innerHTML = subjectItems
+          .map((subject, index) => `<span class="pill">${escapeHtml(subject)} <button type="button" class="chip-remove" onclick="removeSubject(${index})" title="Remove subject">x</button></span>`)
+          .join("");
+      }
+
+      function setSubjects(value) {
+        subjectItems = parseSubjects(value);
+        renderSubjectChips();
+      }
+
+      function addSubject() {
+        const value = subject_entry.value.trim();
+        if (!value) return;
+        const additions = parseSubjects(value);
+        additions.forEach(subject => {
+          if (!subjectItems.some(item => item.toLowerCase() === subject.toLowerCase())) {
+            subjectItems.push(subject);
+          }
+        });
+        subject_entry.value = "";
+        renderSubjectChips();
+      }
+
+      function removeSubject(index) {
+        subjectItems.splice(index, 1);
+        renderSubjectChips();
+      }
+
+      function handleSubjectEntry(event) {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        addSubject();
+      }
+
+      function openAuth(mode) {
+        authMode = mode;
+        document.getElementById("authModal").classList.add("active");
+        authError.style.display = "none";
+        renderAuthMode();
+      }
+
+      function closeAuth() {
+        document.getElementById("authModal").classList.remove("active");
+      }
+
+      function switchAuthMode() {
+        authMode = authMode === "login" ? "signup" : "login";
+        renderAuthMode();
+      }
+
+      function renderAuthMode() {
+        const signup = authMode === "signup";
+        authTitle.textContent = signup ? "Create your account" : "Welcome back";
+        authSubtitle.textContent = signup ? "Start with student or admin access." : "Access your personalized learning workspace.";
+        nameField.style.display = signup ? "grid" : "none";
+        roleField.style.display = signup ? "grid" : "none";
+        authSubmit.textContent = signup ? "Create Account" : "Login";
+        authSwitchText.textContent = signup ? "Already have an account?" : "Need an account?";
+        authSwitch.textContent = signup ? "Login" : "Sign Up";
+      }
+
+      async function api(path, options = {}) {
+        let response;
+        try {
+          response = await fetch(`${API_BASE}${path}`, {
+            ...options,
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              ...(options.headers || {})
+            }
+          });
+        } catch (error) {
+          throw new Error("Cannot connect to backend. Start FastAPI on http://127.0.0.1:8000 and refresh the page.");
+        }
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.detail || "Request failed");
+        return data;
+      }
+
+      async function submitAuth() {
+        try {
+          authError.style.display = "none";
+          const body = {
+            email: authEmail.value,
+            password: authPassword.value
+          };
+          if (!body.email || !body.password) {
+            throw new Error("Please enter email and password.");
+          }
+          if (authMode === "signup") {
+            body.name = authName.value;
+            body.role = authRole.value;
+            if (!body.name) throw new Error("Please enter your name.");
+          }
+          const data = await api(authMode === "signup" ? "/api/auth/register" : "/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify(body)
+          });
+          token = data.access_token;
+          role = data.role || "student";
+          localStorage.setItem("learnova_token", token);
+          localStorage.setItem("learnova_role", role);
+          closeAuth();
+          enterApp();
+        } catch (error) {
+          authError.textContent = error.message;
+          authError.style.display = "block";
+          showMessage(error.message, true);
+        }
+      }
+
+      function enterApp() {
+        landing.style.display = "none";
+        document.querySelectorAll("body > .section, body > footer").forEach(el => el.style.display = "none");
+        appShell.classList.add("active");
+        document.querySelectorAll(".side-nav button[data-tab]").forEach(button => {
+          const isAdminTab = button.dataset.tab === "admin";
+          button.style.display = role === "admin" ? (isAdminTab ? "inline-flex" : "none") : (isAdminTab ? "none" : "inline-flex");
+        });
+        quickGenerate.style.display = role === "admin" ? "none" : "inline-flex";
+        if (role === "admin") {
+          showAppSection("admin");
+          loadAdmin();
+        } else {
+          loadProfile().then(profile => {
+            if (profile && profile.setup_completed) {
+              showAppSection(localStorage.getItem("learnova_section") || "dashboard");
+              restoreLastResult();
+              loadDashboard();
+            } else {
+              showAppSection("profile");
+              showMessage("Complete your profile to generate a study plan.");
+            }
+          });
+        }
+      }
+
+      function logout() {
+        token = "";
+        role = "";
+        lastRecommendationId = null;
+        localStorage.removeItem("learnova_token");
+        localStorage.removeItem("learnova_role");
+        appShell.classList.remove("active");
+        landing.style.display = "block";
+        document.querySelectorAll("body > .section, body > footer").forEach(el => el.style.display = "");
+      }
+
+      function toggleSidebar() {
+        sidebar.classList.toggle("open");
+      }
+
+      function showAppSection(name) {
+        localStorage.setItem("learnova_section", name);
+        const titles = {
+          dashboard: ["Dashboard", "Your learning command center."],
+          profile: ["Profile", "Tell the AI what the student wants to improve."],
+          generate: ["Roadmap", "Create an AI-powered study roadmap."],
+          feedback: ["Feedback", "Reward useful strategies and improve future suggestions."],
+          admin: ["Admin", "Monitor students and system activity."]
+        };
+        document.querySelectorAll(".app-section").forEach(section => section.classList.remove("active"));
+        document.getElementById(`${name}Section`).classList.add("active");
+        document.querySelectorAll(".side-nav button").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === name));
+        screenTitle.textContent = titles[name][0];
+        screenSubtitle.textContent = titles[name][1];
+        sidebar.classList.remove("open");
+      }
+
+      async function loadProfile() {
+        try {
+          const p = await api("/api/profile/me");
+          clearProfileForm();
+          p_name.value = p.name || "";
+          updateSetupHeading();
+          if (!p.setup_completed) return p;
+          for (const [key, value] of Object.entries(p)) {
+            const el = document.getElementById(`p_${key}`);
+            if (el) el.value = value;
+          }
+          setSubjects(p.subjects || "");
+          study_time_choice.value = p.study_hours || "";
+          updateSetupHeading();
+          return p;
+        } catch (_) {
+          return null;
+        }
+      }
+
+      function clearProfileForm() {
+        ["p_name", "p_age", "p_quiz_scores", "p_target_score"].forEach(id => document.getElementById(id).value = "");
+        ["p_education_level", "p_learning_style", "p_preferred_study_time", "study_time_choice", "p_weak_point", "p_focus_topics"].forEach(id => document.getElementById(id).value = "");
+        p_plan_days.value = "7";
+        p_plan_mode.value = "improvement";
+        subject_entry.value = "";
+        setSubjects("");
+      }
+
+      function updateSetupHeading() {
+        const name = p_name.value.trim();
+        setupHeading.textContent = name ? `${name}'s learning profile` : "Learning profile";
+      }
+
+      function profilePayload() {
+        if (subject_entry.value.trim()) {
+          addSubject();
+        }
+        const score = Number(p_quiz_scores.value || 0);
+        const target = Number(p_target_score.value || 0);
+        const weak = p_weak_point.value || "Solving problems";
+        return {
+          name: p_name.value,
+          age: Number(p_age.value || 18),
+          education_level: p_education_level.value || "Undergraduate",
+          subjects: subjectItems.length ? subjectItems.join(", ") : "General",
+          learning_style: p_learning_style.value || "Visual",
+          study_hours: Number(study_time_choice.value || 1),
+          attention_span: weak === "Lack of focus" ? 25 : weak === "Time management" ? 30 : 45,
+          preferred_study_time: p_preferred_study_time.value || "Evening",
+          quiz_scores: score,
+          target_score: target || Math.min(score + 15, 100),
+          weak_point: weak,
+          focus_topics: p_focus_topics.value.trim(),
+          plan_days: Number(p_plan_days.value || 7),
+          plan_mode: p_plan_mode.value || "improvement",
+          attendance: 85,
+          assignment_performance: score || 65
+        };
+      }
+
+      async function saveProfile(goDashboard = true) {
+        try {
+          await api("/api/profile/me", { method: "PUT", body: JSON.stringify(profilePayload()) });
+          showMessage("Student setup saved.");
+          await loadDashboard();
+          if (goDashboard) showAppSection("dashboard");
+          return true;
+        } catch (error) {
+          showMessage(error.message, true);
+          return false;
+        }
+      }
+
+      async function saveAndGenerate() {
+        const saved = await saveProfile(false);
+        if (!saved) return;
+        showAppSection("generate");
+        await generateRecommendation();
+      }
+
+      function renderDashboardVisuals(d) {
+        const performance = d?.performance || {};
+        const bars = [
+          ["Current", Number(performance.quiz_scores || 0)],
+          ["Target", Number(performance.target_score || 0)],
+          ["Assignments", Number(performance.assignment_performance || 0)],
+          ["Attendance", Number(performance.attendance || 0)]
+        ];
+        performanceBars.innerHTML = bars.map(([label, value]) => `
+          <div class="bar-row">
+            <span>${label}</span>
+            <div class="bar-track"><span class="bar-fill" style="--value:${Math.max(0, Math.min(100, value))}%"></span></div>
+            <strong>${Math.round(value)}%</strong>
+          </div>
+        `).join("");
+
+        const completion = d?.task_completion || { completed: 0, total: 0, percent: 0 };
+        const percent = Math.max(0, Math.min(100, Number(completion.percent || 0)));
+        taskDonut.style.setProperty("--percent", percent);
+        taskDonut.dataset.label = `${Math.round(percent)}%`;
+        progressNote.textContent = completion.total
+          ? `${completion.completed} of ${completion.total} tasks completed.`
+          : "Generate a plan and complete tasks to see progress.";
+      }
+
+      async function loadDashboard() {
+        try {
+          const d = await api("/api/analytics/dashboard");
+          latestDashboard = d;
+          if (!d.profile.setup_completed) {
+            scoreStat.textContent = "-";
+            targetStat.textContent = "-";
+            rewardStat.textContent = "-";
+            taskStat.textContent = "-";
+            taskSubtext.textContent = "Weekly plan progress";
+            scoreBar.style.setProperty("--value", "0%");
+            targetBar.style.setProperty("--value", "0%");
+            renderDashboardVisuals(null);
+            weakAreaList.innerHTML = '<div class="empty-state">Complete your profile to see weak areas.</div>';
+            subjectList.innerHTML = '<div class="empty-state">Add subjects in your profile.</div>';
+            recentActivity.innerHTML = '<div class="empty-state">No recommendations yet. Save profile and generate a study plan.</div>';
+            dashboardTasks.innerHTML = '<div class="empty-state">Generate a study plan to start tracking daily tasks.</div>';
+            return;
+          }
+          scoreStat.textContent = `${d.performance.quiz_scores}%`;
+          targetStat.textContent = `${d.performance.target_score}%`;
+          rewardStat.textContent = d.average_reward;
+          taskStat.textContent = `${d.task_completion.percent}%`;
+          taskSubtext.textContent = `${d.task_completion.completed}/${d.task_completion.total} tasks completed`;
+          scoreBar.style.setProperty("--value", `${d.performance.quiz_scores}%`);
+          targetBar.style.setProperty("--value", `${d.performance.target_score}%`);
+          renderDashboardVisuals(d);
+          weakAreaList.innerHTML = d.weak_areas.map(item => `<span class="pill">${item}</span>`).join("");
+          const savedSubjects = parseSubjects(d.profile.subjects);
+          subjectList.innerHTML = savedSubjects.length
+            ? savedSubjects.map(subject => `<span class="pill">${escapeHtml(subject)}</span>`).join("")
+            : '<div class="empty-state">No subjects saved yet.</div>';
+          recentActivity.innerHTML = d.recent_recommendations.length
+            ? d.recent_recommendations.map(item => `<div class="activity"><b>${item.strategy}</b><br><small>Confidence ${(item.confidence * 100).toFixed(0)}%</small></div>`).join("")
+            : '<div class="empty-state">No recommendations generated yet.</div>';
+          dashboardTasks.innerHTML = d.tasks.length ? renderTaskList(d.tasks) : '<div class="empty-state">Generate a study plan to start tracking daily tasks.</div>';
+        } catch (_) {}
+      }
+
+      function renderTaskList(tasks) {
+        const grouped = tasks.reduce((acc, task) => {
+          acc[task.day] = acc[task.day] || [];
+          acc[task.day].push(task);
+          return acc;
+        }, {});
+        return Object.entries(grouped).map(([day, dayTasks]) => `
+          <div class="day-group">
+            <h4>${day}</h4>
+            ${dayTasks.map(task => `
+              <div class="task-row ${task.completed ? "done" : ""}">
+                <input class="task-check" type="checkbox" ${task.completed ? "checked" : ""} onchange="toggleTask(${task.id}, this.checked)" />
+                <div>
+                  <div class="task-title"><b>${task.time_slot ? task.time_slot + " - " : ""}${task.title}</b></div>
+                  <small>${task.description}</small>
+                </div>
+                <span class="task-meta">${task.duration_minutes} min</span>
+              </div>
+            `).join("")}
+          </div>
+        `).join("");
+      }
+
+      function taskSubject(task) {
+        const topic = task.time_slot || "";
+        return topic.includes(" - ") ? topic.split(" - ")[0].trim() : "";
+      }
+
+      function subjectsFromTasks(tasks) {
+        return tasks
+          .map(taskSubject)
+          .filter(Boolean)
+          .filter((subject, index, list) => list.findIndex(item => item.toLowerCase() === subject.toLowerCase()) === index);
+      }
+
+      function selectPlanSubject(index) {
+        renderPlan(activePlanTasks, activePlanSubjects[index] || "");
+      }
+
+      function renderPlan(tasks, selectedSubject = "") {
+        activePlanTasks = tasks || [];
+        activePlanSubjects = subjectsFromTasks(activePlanTasks);
+        const subject = selectedSubject || activePlanSubjects[0] || "";
+        const visibleTasks = subject ? activePlanTasks.filter(task => taskSubject(task).toLowerCase() === subject.toLowerCase()) : activePlanTasks;
+        const tabs = activePlanSubjects.length > 1
+          ? `<div class="subject-tabs">${activePlanSubjects.map((item, index) => `<button type="button" class="btn subject-tab ${item === subject ? "active" : ""}" onclick="selectPlanSubject(${index})">${escapeHtml(item)}</button>`).join("")}</div>`
+          : "";
+        const title = subject ? `${escapeHtml(subject)} Study Plan` : "Weekly Study Plan";
+        planArea.innerHTML = `<h3 style="margin-top:22px">${title}</h3>${tabs}${renderTaskList(visibleTasks)}`;
+      }
+
+      function renderRecommendation(r) {
+        lastRecommendationId = r.id;
+        const source = r.plan_source || (r.rationale || "").match(/Study plan source: ([^.]+)/)?.[1] || "Unknown";
+        resultArea.className = "glass-card";
+        resultArea.innerHTML = `
+          <span class="pill">Confidence ${(r.confidence * 100).toFixed(0)}%</span>
+          <span class="pill">Plan source: ${source}</span>
+          <h2>${r.strategy}</h2>
+          <p style="color:var(--muted);line-height:1.65">${r.rationale}</p>
+        `;
+        renderPlan(r.study_plan || []);
+      }
+
+      function restoreLastResult() {
+        const saved = localStorage.getItem("learnova_last_result");
+        if (!saved) return;
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.version !== APP_RESULT_VERSION || !parsed.study_plan || parsed.study_plan.length < 14) {
+            localStorage.removeItem("learnova_last_result");
+            return;
+          }
+          renderRecommendation(parsed);
+        } catch (_) {
+          localStorage.removeItem("learnova_last_result");
+        }
+      }
+
+      async function generateRecommendation() {
+        try {
+          localStorage.setItem("learnova_section", "generate");
+          generateBtn.disabled = true;
+          generateBtn.innerHTML = '<span class="loader"></span> Generating';
+          resultArea.className = "empty-state";
+          resultArea.textContent = "Saving profile and analyzing model confidence...";
+          planArea.innerHTML = "";
+          await api("/api/profile/me", { method: "PUT", body: JSON.stringify(profilePayload()) });
+          const r = await api("/api/recommendations", { method: "POST" });
+          r.version = APP_RESULT_VERSION;
+          localStorage.setItem("learnova_last_result", JSON.stringify(r));
+          renderRecommendation(r);
+          await loadDashboard();
+        } catch (error) {
+          showMessage(error.message, true);
+        } finally {
+          generateBtn.disabled = false;
+          generateBtn.textContent = "Generate Roadmap";
+        }
+      }
+
+      async function toggleTask(taskId, completed) {
+        try {
+          await api(`/api/tasks/${taskId}`, {
+            method: "PATCH",
+            body: JSON.stringify({ completed })
+          });
+          const saved = localStorage.getItem("learnova_last_result");
+          if (saved) {
+            const result = JSON.parse(saved);
+            result.study_plan = (result.study_plan || []).map(task => task.id === taskId ? { ...task, completed: completed ? 1 : 0 } : task);
+            localStorage.setItem("learnova_last_result", JSON.stringify(result));
+            renderRecommendation(result);
+          }
+          await loadDashboard();
+        } catch (error) {
+          showMessage(error.message, true);
+        }
+      }
+
+      async function submitFeedback() {
+        if (!lastRecommendationId) return showMessage("Generate a recommendation first.", true);
+        try {
+          const data = await api("/api/feedback", {
+            method: "POST",
+            body: JSON.stringify({
+              recommendation_id: lastRecommendationId,
+              rating: Number(rating.value || 3),
+              helped: helped.value === "true",
+              score_before: Number(score_before.value || 0),
+              score_after: Number(score_after.value || 0),
+              comments: comments.value
+            })
+          });
+          showMessage(`${data.message}. Reward: ${data.reward}`);
+          await loadDashboard();
+        } catch (error) {
+          showMessage(error.message, true);
+        }
+      }
+
+      async function loadAdmin() {
+        try {
+          const d = await api("/api/analytics/admin");
+          adminArea.innerHTML = `
+            <div class="stats-grid">
+              <article class="glass-card stat"><span>Students</span><strong>${d.total_students}</strong></article>
+              <article class="glass-card stat"><span>Recommendations</span><strong>${d.total_recommendations}</strong></article>
+              <article class="glass-card stat"><span>Feedback</span><strong>${d.total_feedback}</strong></article>
+              <article class="glass-card stat"><span>Avg Reward</span><strong>${d.average_reward}</strong></article>
+            </div>
+            <div class="dash-grid">
+              <article class="glass-card"><h3>Students Needing Attention</h3>${d.weak_students.map(s => `<div class="student-row"><b>${s.name}</b><br><small>${s.subject} &middot; Score ${s.score}% &middot; Target ${s.target}%</small><br><span class="pill">${s.weak_point}</span></div>`).join("") || '<div class="empty-state">No weak students found.</div>'}</article>
+              <article class="glass-card"><h3>Strategy Usage</h3>${Object.entries(d.strategy_counts).map(([name, count]) => `<span class="pill">${name}: ${count}</span>`).join("") || '<div class="empty-state">No recommendations yet.</div>'}</article>
+            </div>
+          `;
+        } catch (error) {
+          showMessage(error.message, true);
+        }
+      }
+
+      async function restoreSession() {
+        if (!token) return;
+        try {
+          const me = await api("/api/auth/me");
+          role = me.role || role || "student";
+          localStorage.setItem("learnova_role", role);
+          enterApp();
+        } catch (_) {
+          token = "";
+          role = "";
+          localStorage.removeItem("learnova_token");
+          localStorage.removeItem("learnova_role");
+        }
+      }
+
+      updateThemeControls();
+      restoreSession();
+    </script>
+  </body>
+</html>
