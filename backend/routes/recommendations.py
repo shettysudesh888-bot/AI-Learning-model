@@ -1,5 +1,4 @@
 import re
-<<<<<<< HEAD
 import textwrap
 
 from fastapi import APIRouter, Depends, HTTPException, Response
@@ -7,14 +6,12 @@ from sqlalchemy.orm import Session
 
 from backend.database.session import get_db
 from backend.models.entities import Feedback, Recommendation, StudentProfile, StudyTask, User
-=======
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from backend.database.session import get_db
 from backend.models.entities import Recommendation, StudentProfile, StudyTask, User
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 from backend.recommendation_engine.engine import (
     build_recommendation_payload,
     decode_resources,
@@ -22,11 +19,8 @@ from backend.recommendation_engine.engine import (
     predict_strategy,
     state_key,
 )
-<<<<<<< HEAD
 from backend.recommendation_engine.groq_plan import generate_groq_plan, groq_status
-=======
 from backend.recommendation_engine.groq_plan import generate_groq_plan
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 from backend.rl_agent.q_learning import QLearningAgent
 from backend.schemas import RecommendationResponse
 from backend.utils.security import get_current_user
@@ -36,16 +30,13 @@ router = APIRouter()
 
 @router.get("/llm-status")
 def llm_status():
-<<<<<<< HEAD
     return groq_status()
-=======
     import os
 
     return {
         "groq_configured": bool(os.getenv("GROQ_API_KEY")),
         "groq_model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
     }
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 
 
 def _subject_focus(subject: str) -> dict[str, str]:
@@ -122,7 +113,6 @@ def _split_topics(topics: str) -> list[str]:
     return [topic.strip() for topic in normalized.replace(";", ",").split(",") if topic.strip()]
 
 
-<<<<<<< HEAD
 def _subjects_from_tasks(tasks: list[StudyTask]) -> list[str]:
     subjects = []
     for task in tasks:
@@ -206,8 +196,6 @@ def _build_study_plan_pdf(row: Recommendation, tasks: list[StudyTask]) -> bytes:
     return bytes(pdf)
 
 
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 def build_study_tasks(profile: StudentProfile, strategy: str, recommendation_id: int, user_id: int) -> tuple[list[StudyTask], str]:
     subjects = _split_subjects(profile.subjects)
     groq_tasks = generate_groq_plan(profile, strategy) if len(subjects) == 1 else None
@@ -228,13 +216,10 @@ def build_study_tasks(profile: StudentProfile, strategy: str, recommendation_id:
             ],
             "Groq LLM",
         )
-<<<<<<< HEAD
     if len(subjects) > 1:
         fallback_source = "Local fallback (Groq skipped for multiple subjects)"
     else:
         fallback_source = f"Local fallback ({groq_status()['last_attempt']['reason']})"
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 
     weak = profile.weak_point.lower()
     gap = max(0, profile.target_score - profile.quiz_scores)
@@ -330,20 +315,14 @@ def build_study_tasks(profile: StudentProfile, strategy: str, recommendation_id:
             )
             for day, time_slot, title, description, duration in plan
         ],
-<<<<<<< HEAD
         fallback_source,
-=======
         "Local fallback",
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
     )
 
 
 def _to_response(row: Recommendation) -> RecommendationResponse:
-<<<<<<< HEAD
     source_match = re.search(r"Study plan source: (.+)\.$", row.rationale)
     plan_source = source_match.group(1) if source_match else "Unknown"
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
     tasks = [
         {
             "id": task.id,
@@ -363,11 +342,8 @@ def _to_response(row: Recommendation) -> RecommendationResponse:
         confidence=row.confidence,
         resources=decode_resources(row.resources),
         study_plan=tasks,
-<<<<<<< HEAD
         plan_source=plan_source,
-=======
         plan_source="Groq LLM" if "Study plan source: Groq LLM" in row.rationale else "Local fallback",
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         rationale=row.rationale,
         state_key=row.state_key,
         created_at=row.created_at,
@@ -410,7 +386,6 @@ def history(current_user: User = Depends(get_current_user), db: Session = Depend
         .all()
     )
     return [_to_response(row) for row in rows]
-<<<<<<< HEAD
 
 
 @router.get("/{recommendation_id}/pdf")
@@ -487,5 +462,3 @@ def delete_recommendation(
         profile.subjects = ""
     db.commit()
     return {"message": "Study plan deleted", "deleted_subjects": deleted_subjects}
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
