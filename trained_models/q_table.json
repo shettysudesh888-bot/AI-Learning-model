@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "strong:steady:consistent:reading": {
     "Video Tutorials": 0.0,
@@ -19,4 +20,27 @@
     "Group Study": 0.0,
     "Concept Maps": -0.07
   }
+=======
+{
+  "strong:steady:consistent:reading": {
+    "Video Tutorials": 0.0,
+    "Notes": 0.0,
+    "Practice Quizzes": 0.0,
+    "Revision Plans": 0.0,
+    "Mock Tests": 0.0,
+    "Pomodoro Technique": 0.5171,
+    "Group Study": 0.0,
+    "Concept Maps": 0.0
+  },
+  "strong:steady:consistent:visual": {
+    "Video Tutorials": 0.0,
+    "Notes": 0.0,
+    "Practice Quizzes": 0.0,
+    "Revision Plans": 0.0,
+    "Mock Tests": 0.0,
+    "Pomodoro Technique": 0.0,
+    "Group Study": 0.0,
+    "Concept Maps": -0.07
+  }
+>>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 }

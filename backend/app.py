@@ -1,11 +1,15 @@
 from pathlib import Path
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 import sys
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+<<<<<<< HEAD
 
 def load_local_env() -> None:
     env_path = ROOT_DIR / ".env"
@@ -21,6 +25,8 @@ def load_local_env() -> None:
 
 load_local_env()
 
+=======
+>>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
