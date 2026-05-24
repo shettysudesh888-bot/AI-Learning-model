@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+learning_strategy.db
+frontend/node_modules/
+frontend/dist/
+.env

@@ -1,0 +1,22 @@
+{
+  "strong:steady:consistent:reading": {
+    "Video Tutorials": 0.0,
+    "Notes": 0.0,
+    "Practice Quizzes": 0.0,
+    "Revision Plans": 0.0,
+    "Mock Tests": 0.0,
+    "Pomodoro Technique": 0.5171,
+    "Group Study": 0.0,
+    "Concept Maps": 0.0
+  },
+  "strong:steady:consistent:visual": {
+    "Video Tutorials": 0.0,
+    "Notes": 0.0,
+    "Practice Quizzes": 0.0,
+    "Revision Plans": 0.0,
+    "Mock Tests": 0.0,
+    "Pomodoro Technique": 0.0,
+    "Group Study": 0.0,
+    "Concept Maps": -0.07
+  }
+}

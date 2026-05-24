@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Learning Strategy</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: #17202a;
+        background: #f5f7f6;
+      }
+      header {
+        padding: 28px 6vw;
+        color: white;
+        background: linear-gradient(120deg, #0f766e, #17202a);
+      }
+      header h1 { margin: 0; font-size: 36px; }
+      header p { max-width: 720px; line-height: 1.6; }
+      main {
+        width: min(1180px, 92vw);
+        margin: 24px auto 60px;
+        display: grid;
+        gap: 18px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: white;
+        border: 1px solid #d8e3df;
+        border-radius: 8px;
+        padding: 22px;
+        box-shadow: 0 14px 32px rgba(23, 32, 42, 0.08);
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 12px;
+        color: #53605d;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      input, select, textarea {
+        width: 100%;
+        border: 1px solid #cbd8d5;
+        border-radius: 8px;
+        padding: 10px 11px;
+        font: inherit;
+      }
+      textarea { min-height: 80px; resize: vertical; }
+      button {
+        border: 0;
+        border-radius: 8px;
+        padding: 11px 16px;
+        margin: 4px 8px 4px 0;
+        color: white;
+        background: #0f766e;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      button.secondary { background: #e76f51; }
+      .fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px 14px;
+      }
+      .notice {
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #ecfdf5;
+        color: #14532d;
+        border: 1px solid #bbf7d0;
+      }
+      .error {
+        background: #fff1f2;
+        color: #9f1239;
+        border-color: #fecdd3;
+      }
+      .resource {
+        padding: 12px;
+        border: 1px solid #d8e3df;
+        border-radius: 8px;
+        margin-top: 10px;
+        background: #fbfdfc;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .metric strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 26px;
+        color: #0f766e;
+      }
+      @media (max-width: 860px) {
+        .grid, .fields, .metrics { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>AI Learning Strategy</h1>
+      <p>One-command demo frontend served by FastAPI. Register, update your profile, generate a recommendation, and send feedback to update the Q-learning layer.</p>
+    </header>
+    <main>
+      <div id="notice" class="notice" style="display:none"></div>
+      <section class="grid">
+        <div class="card">
+          <h2>Login / Register</h2>
+          <label>Name <input id="name" /></label>
+          <label>Email <input id="email" /></label>
+          <label>Password <input id="password" type="password" /></label>
+          <button onclick="register()">Register</button>
+          <button class="secondary" onclick="login()">Login</button>
+        </div>
+        <div class="card">
+          <h2>Dashboard</h2>
+          <div class="metrics">
+            <div class="metric">Quiz<strong id="quizMetric">-</strong></div>
+            <div class="metric">Attendance<strong id="attendanceMetric">-</strong></div>
+            <div class="metric">Assignments<strong id="assignmentMetric">-</strong></div>
+          </div>
+          <p><b>Weak areas:</b> <span id="weakAreas">Login first</span></p>
+          <p><b>Average RL reward:</b> <span id="rewardMetric">-</span></p>
+          <button onclick="loadDashboard()">Refresh Dashboard</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Student Profile</h2>
+        <div class="fields">
+          <label>Name <input id="p_name" /></label>
+          <label>Age <input id="p_age" type="number" /></label>
+          <label>Education Level <input id="p_education_level" /></label>
+          <label>Subjects <input id="p_subjects" /></label>
+          <label>Learning Style
+            <select id="p_learning_style">
+              <option>Visual</option><option>Reading</option><option>Practical</option><option>Audio</option>
+            </select>
+          </label>
+          <label>Study Hours <input id="p_study_hours" type="number" step="0.1" /></label>
+          <label>Attention Span <input id="p_attention_span" type="number" /></label>
+          <label>Preferred Study Time <input id="p_preferred_study_time" /></label>
+          <label>Quiz Scores <input id="p_quiz_scores" type="number" /></label>
+          <label>Attendance <input id="p_attendance" type="number" /></label>
+          <label>Assignment Performance <input id="p_assignment_performance" type="number" /></label>
+        </div>
+        <button onclick="saveProfile()">Save Profile</button>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Recommendation</h2>
+          <button onclick="recommend()">Generate Recommendation</button>
+          <div id="recommendation"></div>
+        </div>
+        <div class="card">
+          <h2>Feedback</h2>
+          <label>Rating <input id="rating" type="number" min="1" max="5" /></label>
+          <label>Helped?
+            <select id="helped"><option value="true">Yes</option><option value="false">No</option></select>
+          </label>
+          <label>Score Before <input id="score_before" type="number" /></label>
+          <label>Score After <input id="score_after" type="number" /></label>
+          <label>Comments <textarea id="comments"></textarea></label>
+          <button onclick="sendFeedback()">Submit Feedback</button>
+        </div>
+      </section>
+    </main>
+    <script>
+      const API_BASE = location.port === "8000" ? "" : "http://127.0.0.1:8000";
+      localStorage.removeItem("token");
+      let token = "";
+      let lastRecommendationId = null;
+
+      function show(message, isError = false) {
+        const box = document.getElementById("notice");
+        box.textContent = message;
+        box.className = isError ? "notice error" : "notice";
+        box.style.display = "block";
+      }
+
+      async function api(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...(options.headers || {})
+          }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.detail || "Request failed");
+        return data;
+      }
+
+      async function register() {
+        try {
+          const data = await api("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({
+              name: document.getElementById("name").value,
+              email: document.getElementById("email").value,
+              password: document.getElementById("password").value
+            })
+          });
+          token = data.access_token;
+          localStorage.setItem("token", token);
+          show("Registered and logged in");
+          loadProfile();
+          loadDashboard();
+        } catch (error) { show(error.message, true); }
+      }
+
+      async function login() {
+        try {
+          const data = await api("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({
+              email: document.getElementById("email").value,
+              password: document.getElementById("password").value
+            })
+          });
+          token = data.access_token;
+          localStorage.setItem("token", token);
+          show("Logged in");
+          loadProfile();
+          loadDashboard();
+        } catch (error) { show(error.message, true); }
+      }
+
+      async function loadProfile() {
+        try {
+          const p = await api("/api/profile/me");
+          for (const [key, value] of Object.entries(p)) {
+            const el = document.getElementById(`p_${key}`);
+            if (el) el.value = value;
+          }
+        } catch (error) { show(error.message, true); }
+      }
+
+      function profilePayload() {
+        return {
+          name: p_name.value,
+          age: Number(p_age.value),
+          education_level: p_education_level.value,
+          subjects: p_subjects.value,
+          learning_style: p_learning_style.value,
+          study_hours: Number(p_study_hours.value),
+          attention_span: Number(p_attention_span.value),
+          preferred_study_time: p_preferred_study_time.value,
+          quiz_scores: Number(p_quiz_scores.value),
+          attendance: Number(p_attendance.value),
+          assignment_performance: Number(p_assignment_performance.value)
+        };
+      }
+
+      async function saveProfile() {
+        try {
+          await api("/api/profile/me", { method: "PUT", body: JSON.stringify(profilePayload()) });
+          show("Profile saved");
+          loadDashboard();
+        } catch (error) { show(error.message, true); }
+      }
+
+      async function recommend() {
+        try {
+          const r = await api("/api/recommendations", { method: "POST" });
+          lastRecommendationId = r.id;
+          const resourcesHtml = r.resources
+            .map(item => '<div class="resource"><b>' + item.title + '</b><br>' + item.description + '</div>')
+            .join("");
+          document.getElementById("recommendation").innerHTML = `
+            <h3>${r.strategy}</h3>
+            <p><b>Confidence:</b> ${Math.round(r.confidence * 100)}%</p>
+            <p>${r.rationale}</p>
+            ${resourcesHtml}
+          `;
+          show("Recommendation generated");
+        } catch (error) { show(error.message, true); }
+      }
+
+      async function sendFeedback() {
+        if (!lastRecommendationId) return show("Generate a recommendation first", true);
+        try {
+          const data = await api("/api/feedback", {
+            method: "POST",
+            body: JSON.stringify({
+              recommendation_id: lastRecommendationId,
+              rating: Number(rating.value),
+              helped: helped.value === "true",
+              score_before: Number(score_before.value),
+              score_after: Number(score_after.value),
+              comments: comments.value
+            })
+          });
+          show(`${data.message}. Reward: ${data.reward}`);
+          loadDashboard();
+        } catch (error) { show(error.message, true); }
+      }
+
+      async function loadDashboard() {
+        try {
+          const d = await api("/api/analytics/dashboard");
+          quizMetric.textContent = d.performance.quiz_scores;
+          attendanceMetric.textContent = d.performance.attendance;
+          assignmentMetric.textContent = d.performance.assignment_performance;
+          weakAreas.textContent = d.weak_areas.join(", ");
+          rewardMetric.textContent = d.average_reward;
+        } catch (error) { show(error.message, true); }
+      }
+
+    </script>
+  </body>
+</html>

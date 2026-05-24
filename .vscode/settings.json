@@ -1,0 +1,11 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    "**/learning_strategy.db",
+    "**/learning_strategy.db-*",
+    "**/.venv/**",
+    "**/__pycache__/**",
+    "**/trained_models/**",
+    "**/*.pyc"
+  ],
+  "liveServer.settings.port": 5501
+}
