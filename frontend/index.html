@@ -151,7 +151,6 @@
         background: var(--panel);
         border: 1px solid var(--line);
       }
-<<<<<<< HEAD
       .btn-danger {
         color: #991b1b;
         background: #fee2e2;
@@ -163,8 +162,6 @@
         border-radius: 10px;
         font-size: 0.82rem;
       }
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
       .btn-wide { width: 100%; }
 
       .hero {
@@ -652,7 +649,6 @@
         margin-top: 10px;
       }
 
-<<<<<<< HEAD
       .activity {
         display: flex;
         align-items: center;
@@ -669,8 +665,6 @@
 
       .result-actions { margin: 14px 0 10px; }
 
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
       .task-row {
         display: grid;
         grid-template-columns: auto 1fr auto;
@@ -1613,7 +1607,6 @@
             ? savedSubjects.map(subject => `<span class="pill">${escapeHtml(subject)}</span>`).join("")
             : '<div class="empty-state">No subjects saved yet.</div>';
           recentActivity.innerHTML = d.recent_recommendations.length
-<<<<<<< HEAD
             ? d.recent_recommendations.map(item => `
               <div class="activity">
                 <div><b>${escapeHtml(item.strategy)}</b><br><small>Confidence ${(item.confidence * 100).toFixed(0)}%</small></div>
@@ -1623,15 +1616,11 @@
                 </div>
               </div>
             `).join("")
-=======
-            ? d.recent_recommendations.map(item => `<div class="activity"><b>${item.strategy}</b><br><small>Confidence ${(item.confidence * 100).toFixed(0)}%</small></div>`).join("")
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
             : '<div class="empty-state">No recommendations generated yet.</div>';
           dashboardTasks.innerHTML = d.tasks.length ? renderTaskList(d.tasks) : '<div class="empty-state">Generate a study plan to start tracking daily tasks.</div>';
         } catch (_) {}
       }
 
-<<<<<<< HEAD
       async function deleteRecommendation(recommendationId) {
         if (!window.confirm("Delete this saved study plan?")) return;
         try {
@@ -1680,8 +1669,6 @@
         }
       }
 
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
       function renderTaskList(tasks) {
         const grouped = tasks.reduce((acc, task) => {
           acc[task.day] = acc[task.day] || [];
@@ -1741,12 +1728,9 @@
           <span class="pill">Confidence ${(r.confidence * 100).toFixed(0)}%</span>
           <span class="pill">Plan source: ${source}</span>
           <h2>${r.strategy}</h2>
-<<<<<<< HEAD
           <div class="result-actions">
             <button type="button" class="btn btn-soft btn-small" onclick="downloadStudyPlan(${r.id})" title="Download study plan PDF">Download PDF</button>
           </div>
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
           <p style="color:var(--muted);line-height:1.65">${r.rationale}</p>
         `;
         renderPlan(r.study_plan || []);

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # AI-Based Personalized Learning Strategy Recommendation System
 
 Full-stack AI learning assistant that recommends personalized study strategies from student goals, previous exam score, target score, weak point, learning preference, and feedback. The backend uses FastAPI, a Random Forest recommendation model, and a simple Q-Learning layer that adapts future recommendations from student outcomes.
@@ -63,7 +62,9 @@ Open `http://127.0.0.1:8000/app`. The frontend is `frontend/index.html`, and it 
 
 ## Demo Login
 
-After backend startup, create a Student or Admin account on the register page. Student accounts use the guided setup flow. Admin accounts can view platform analytics and weak students. Students can add one or more subjects to their profile. They can also enter optional focus topics, choose the plan length, and select a plan mode: full-subject improvement, focus-topic improvement, exam revision, or mock-test practice. When multiple subjects are saved, the recommendation screen creates a separate plan for each subject, and the student can click a subject tab to view that plan.
+After backend startup, create a Student or Admin account on the register page. Student accounts use the guided setup flow. Admin accounts can view platform analytics and weak students. Students can add one or more subjects to their profile. They can also enter optional focus topics, choose the plan length, and select the plan mode: full-subject improvement, focus-topic improvement, exam revision, or mock-test practice.
+
+When multiple subjects are saved, the recommendation screen creates a separate plan for each subject, and the student can click a subject tab to view that plan.
 
 ## Dataset Notes
 
@@ -77,6 +78,8 @@ The trainer prefers `dataset/student_performance.csv` when present. That file is
 - `PUT /api/profile/me`
 - `POST /api/recommendations`
 - `GET /api/recommendations/history`
+- `GET /api/recommendations/{recommendation_id}/pdf`
+- `DELETE /api/recommendations/{recommendation_id}`
 - `POST /api/feedback`
 - `GET /api/analytics/dashboard`
 
@@ -89,183 +92,3 @@ The trainer prefers `dataset/student_performance.csv` when present. That file is
 5. Student receives a recommendation plus a subject-wise improvement plan for the selected number of days.
 6. Student feedback and score improvement become reward signals.
 7. Future recommendations adapt dynamically.
-=======
-# 🎓 AI-Based Personalized Learning Strategy Recommendation System
-
-An intelligent full-stack learning platform that generates personalized study strategies for students using Machine Learning and Reinforcement Learning techniques.
-
-The system analyzes student performance, learning preferences, target goals, weak areas, and previous scores to generate customized study plans and continuously improve recommendations through feedback.
-
----
-
-## 🚀 Features
-
-- User Authentication (Student/Admin login)
-- Personalized study strategy recommendations
-- AI-based prediction using Random Forest
-- Adaptive recommendations using Q-Learning
-- Subject-wise learning plans
-- Performance analytics dashboard
-- Student profile management
-- Feedback-based learning improvement
-- Multiple learning modes:
-  - Full Subject Improvement
-  - Focus Topic Improvement
-  - Exam Revision
-  - Mock Test Practice
-
----
-
-## 🛠 Tech Stack
-
-### Frontend
-- HTML
-- CSS
-- JavaScript
-
-### Backend
-- FastAPI
-- SQLAlchemy
-- JWT Authentication
-
-### Database
-- SQLite
-- MySQL (optional)
-
-### Machine Learning
-- Scikit-learn
-- Pandas
-- NumPy
-- Joblib
-
-### AI Techniques
-- Random Forest
-- Q-Learning
-
----
-
-## 📁 Project Structure
-
-```text
-AI-Learning-Model/
-│
-├── backend/
-├── frontend/
-├── dataset/
-├── notebooks/
-├── trained_models/
-├── models/
-├── screenshots/
-├── README.md
-└── .gitignore
-```
-
----
-
-## ⚙️ Installation
-
-### Clone repository
-
-```bash
-git clone https://github.com/yourusername/AI-Learning-model.git
-cd AI-Learning-model
-```
-
-### Create virtual environment
-
-```bash
-python -m venv .venv
-```
-
-### Activate environment
-
-Windows:
-
-```bash
-.\.venv\Scripts\activate
-```
-
-### Install dependencies
-
-```bash
-pip install -r backend/requirements.txt
-```
-
-### Train model
-
-```bash
-python notebooks/train_model.py
-```
-
-### Run application
-
-```bash
-uvicorn backend.app:app --reload
-```
-
----
-
-## 🌐 Access Application
-
-Open:
-
-```text
-http://127.0.0.1:8000/app
-```
-
----
-
-## 🔄 Working Flow
-
-1. User registers and logs in
-2. Student enters:
-   - Previous score
-   - Target score
-   - Weak areas
-   - Learning preference
-   - Available study time
-
-3. Random Forest predicts a learning strategy
-
-4. Q-Learning improves recommendations based on previous outcomes
-
-5. Personalized study plans are generated
-
-6. Feedback updates future recommendations
-
----
-
-## 📊 API Endpoints
-
-| Method | Endpoint |
-|----------|-----------|
-| POST | /api/auth/register |
-| POST | /api/auth/login |
-| GET | /api/profile/me |
-| PUT | /api/profile/me |
-| POST | /api/recommendations |
-| GET | /api/recommendations/history |
-| POST | /api/feedback |
-| GET | /api/analytics/dashboard |
-
----
-
-## 🔮 Future Enhancements
-
-- Real-time progress tracking
-- AI chatbot assistance
-- Mobile application support
-- Cloud deployment
-- Deep learning recommendation models
-- Integration with LMS platforms
-
----
-
-## 👨‍💻 Developed By
-
-Sudesh S Shetty
-
----
-
-⭐ If you like this project, give it a star.
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b

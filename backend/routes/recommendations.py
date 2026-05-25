@@ -6,12 +6,6 @@ from sqlalchemy.orm import Session
 
 from backend.database.session import get_db
 from backend.models.entities import Feedback, Recommendation, StudentProfile, StudyTask, User
-
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-
-from backend.database.session import get_db
-from backend.models.entities import Recommendation, StudentProfile, StudyTask, User
 from backend.recommendation_engine.engine import (
     build_recommendation_payload,
     decode_resources,
@@ -20,7 +14,6 @@ from backend.recommendation_engine.engine import (
     state_key,
 )
 from backend.recommendation_engine.groq_plan import generate_groq_plan, groq_status
-from backend.recommendation_engine.groq_plan import generate_groq_plan
 from backend.rl_agent.q_learning import QLearningAgent
 from backend.schemas import RecommendationResponse
 from backend.utils.security import get_current_user
@@ -31,12 +24,6 @@ router = APIRouter()
 @router.get("/llm-status")
 def llm_status():
     return groq_status()
-    import os
-
-    return {
-        "groq_configured": bool(os.getenv("GROQ_API_KEY")),
-        "groq_model": os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"),
-    }
 
 
 def _subject_focus(subject: str) -> dict[str, str]:
@@ -316,13 +303,21 @@ def build_study_tasks(profile: StudentProfile, strategy: str, recommendation_id:
             for day, time_slot, title, description, duration in plan
         ],
         fallback_source,
-        "Local fallback",
     )
 
 
 def _to_response(row: Recommendation) -> RecommendationResponse:
-    source_match = re.search(r"Study plan source: (.+)\.$", row.rationale)
-    plan_source = source_match.group(1) if source_match else "Unknown"
+    source_match = re.search(
+        r"Study plan source: (.+)\.$",
+        row.rationale
+    )
+
+    plan_source = (
+        "Groq LLM"
+        if "Study plan source: Groq LLM" in row.rationale
+        else "Local fallback"
+    )
+
     tasks = [
         {
             "id": task.id,
@@ -336,6 +331,7 @@ def _to_response(row: Recommendation) -> RecommendationResponse:
         for task in row.user.study_tasks
         if task.recommendation_id == row.id
     ]
+
     return RecommendationResponse(
         id=row.id,
         strategy=row.strategy,
@@ -343,7 +339,6 @@ def _to_response(row: Recommendation) -> RecommendationResponse:
         resources=decode_resources(row.resources),
         study_plan=tasks,
         plan_source=plan_source,
-        plan_source="Groq LLM" if "Study plan source: Groq LLM" in row.rationale else "Local fallback",
         rationale=row.rationale,
         state_key=row.state_key,
         created_at=row.created_at,

@@ -7,7 +7,6 @@ from backend.models.entities import StudentProfile
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
-<<<<<<< HEAD
 LAST_GROQ_ATTEMPT = {
     "attempted": False,
     "success": False,
@@ -81,30 +80,31 @@ def _flatten_tasks(value) -> list[dict]:
     if isinstance(nested_tasks, list):
         for task in nested_tasks:
             if isinstance(task, dict):
-                merged = {
-                    "day": task.get("day", value.get("day", "")),
-                    "time_slot": task.get("time_slot", value.get("time_slot", "")),
-                    "title": task.get("title", ""),
-                    "description": task.get("description", ""),
-                    "duration_minutes": task.get("duration_minutes", value.get("duration_minutes", 30)),
-                }
-                rows.extend(_flatten_tasks(merged))
+                rows.extend(
+                    _flatten_tasks(
+                        {
+                            "day": task.get("day", value.get("day", "")),
+                            "time_slot": task.get("time_slot", value.get("time_slot", "")),
+                            "title": task.get("title", ""),
+                            "description": task.get("description", ""),
+                            "duration_minutes": task.get(
+                                "duration_minutes",
+                                value.get("duration_minutes", 30),
+                            ),
+                        }
+                    )
+                )
         return rows
 
     if value.get("title"):
         rows.append(value)
     return rows
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
 
 
 def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | None:
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-<<<<<<< HEAD
         _remember_attempt(False, "GROQ_API_KEY is not set.", attempted=False)
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         return None
 
     prompt = {
@@ -123,16 +123,11 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
     body = {
         "model": GROQ_MODEL,
         "temperature": 0.25,
-<<<<<<< HEAD
         "max_tokens": 3000,
-=======
-        "max_tokens": 1200,
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         "messages": [
             {
                 "role": "system",
                 "content": (
-<<<<<<< HEAD
                     "You create topic-based learning roadmaps. Return ONLY valid JSON, no markdown. "
                     "Return one JSON object with a tasks array: {\"tasks\": [...]}. "
                     "The tasks array must cover the requested number of plan_days, with 3 or 4 task rows per day. "
@@ -140,13 +135,6 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
                     "day, time_slot, title, description, duration_minutes. Use time_slot to store the day topic, "
                     "for example 'React - Timed Practice' or 'ML - Mistake Correction'. "
                     "Do not nest task rows inside day objects. "
-=======
-                    "You create topic-based 7-day learning roadmaps. Return ONLY valid JSON, no markdown. "
-                    "The JSON must cover the requested number of plan_days, with 3 or 4 task rows per day. "
-                    "Each day must contain 3 or 4 task rows. Each object must have keys: "
-                    "day, time_slot, title, description, duration_minutes. Use time_slot to store the day topic, "
-                    "for example 'React - Timed Practice' or 'ML - Mistake Correction'. "
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
                     "Do not create a beginner introduction unless the weak point or focus topic requires it. "
                     "Follow plan_mode: improvement, focus, revision, or mock. "
                     "If focus_topics are provided, center the plan on those topics. Otherwise, make a full-subject improvement plan. "
@@ -168,18 +156,14 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-<<<<<<< HEAD
             "Accept": "application/json",
             "User-Agent": "AI-Learning-Strategy/1.0",
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         },
         method="POST",
     )
     try:
         with urllib.request.urlopen(request, timeout=25) as response:
             payload = json.loads(response.read().decode("utf-8"))
-<<<<<<< HEAD
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8", errors="ignore")[:240]
         _remember_attempt(False, f"Groq HTTP {error.code}: {detail or error.reason}")
@@ -192,14 +176,10 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
         return None
     except json.JSONDecodeError:
         _remember_attempt(False, "Groq returned a response that was not valid JSON.")
-=======
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         return None
 
     content = payload.get("choices", [{}])[0].get("message", {}).get("content", "")
     try:
-<<<<<<< HEAD
         tasks = _flatten_tasks(_decode_task_content(content))
     except json.JSONDecodeError:
         _remember_attempt(False, "Groq response task list could not be parsed.")
@@ -207,29 +187,12 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
 
     if not isinstance(tasks, list) or len(tasks) < 14:
         _remember_attempt(False, "Groq response had too few task rows.")
-=======
-        tasks = json.loads(content)
-    except json.JSONDecodeError:
-        start = content.find("[")
-        end = content.rfind("]")
-        if start == -1 or end == -1:
-            return None
-        try:
-            tasks = json.loads(content[start : end + 1])
-        except json.JSONDecodeError:
-            return None
-
-    if not isinstance(tasks, list) or len(tasks) < 14:
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
         return None
 
     cleaned = []
     for task in tasks:
         if not isinstance(task, dict):
-<<<<<<< HEAD
             _remember_attempt(False, "Groq response contained an invalid task row.")
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
             return None
         cleaned.append(
             {
@@ -240,8 +203,5 @@ def generate_groq_plan(profile: StudentProfile, strategy: str) -> list[dict] | N
                 "duration_minutes": int(task.get("duration_minutes", max(20, int(profile.study_hours * 45)))),
             }
         )
-<<<<<<< HEAD
     _remember_attempt(True, f"Groq generated {len(cleaned)} task rows.")
-=======
->>>>>>> d72f55f2f2e33a3d35d5920d3f2ac83012399b4b
     return cleaned
