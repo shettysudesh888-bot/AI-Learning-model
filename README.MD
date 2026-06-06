@@ -7,6 +7,11 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)](https://www.sqlalchemy.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](https://opensource.org/licenses/MIT)
+## 👨‍💻 Connect With Me
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Sudesh%20S%20Shetty-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/sudesh-s-shetty-061838319)
+
+[![GitHub](https://img.shields.io/badge/GitHub-shettysudesh888--bot-black?style=for-the-badge&logo=github)](https://github.com/shettysudesh888-bot)
 
 A state-of-the-art, full-stack AI learning assistant designed to recommend personalized study strategies. By analyzing key student characteristics—such as exam scores, learning preferences, study duration availability, attention spans, and weak points—the system generates tailored study schedules. The recommendation engine integrates a **Random Forest Classifier** for baseline recommendations and a **Q-Learning (Reinforcement Learning)** agent to dynamically refine and adapt strategies based on real student outcomes and feedback.
 
