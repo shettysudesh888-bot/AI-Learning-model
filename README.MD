@@ -1,6 +1,5 @@
 # AI-Based Personalized Learning Strategy Recommendation System
 
-![AI Learning Strategy Banner](screenshots/banner.png)
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
@@ -38,6 +37,22 @@ A state-of-the-art, full-stack AI learning assistant designed to recommend perso
 *   Platform-wide analytics for administrators to track metrics.
 *   Detailed list of student weak points and targeted recommendation logs.
 *   Progress charts, attendance statistics, and learning style distributions.
+
+---
+
+## 📸 Application Screenshots
+
+### 🏠 Home Page
+![Home](screenshots/home.png)
+
+### 📊 Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### 🤖 AI Recommendation
+![Recommendation](screenshots/roadmap.png)
+
+### 📅 Personalized Study Roadmap
+![Roadmap](screenshots/roadmap.png)
 
 ---
 
