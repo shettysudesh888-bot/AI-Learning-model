@@ -1371,7 +1371,7 @@
             }
           });
         } catch (error) {
-          throw new Error("Cannot connect to backend. Start FastAPI on http://127.0.0.1:8000 and refresh the page.");
+          throw new Error("Network error. Please check your connection and try again.");
         }
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.detail || "Request failed");
